@@ -3,13 +3,11 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Hero from "../components/Hero.astro";
-import FeaturedRecipes from "../components/FeaturedRecipes.astro";
+import FeaturedRecipes from "../components/FeaturedRecipes";
 import InfoSection from "../components/InfoSection.astro";
 import { getCollection } from "astro:content";
 
 const allRecipes = await getCollection("recipes");
-// Shuffle and pick 3
-const randomRecipes = allRecipes.sort(() => 0.5 - Math.random()).slice(0, 3);
 ---
 
 <Layout>
@@ -17,7 +15,7 @@ const randomRecipes = allRecipes.sort(() => 0.5 - Math.random()).slice(0, 3);
 
   <main class="flex-grow">
     <Hero />
-    <FeaturedRecipes recipes={randomRecipes} />
+    <FeaturedRecipes recipes={allRecipes} client:load />
     <InfoSection />
   </main>
 

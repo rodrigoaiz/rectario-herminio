@@ -1,0 +1,37 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import RecipeCard from '../../components/RecipeCard.astro';
+import { getCollection } from 'astro:content';
+
+const allRecipes = await getCollection('recipes');
+---
+
+<Layout>
+  <Header />
+  
+  <main class="flex-grow container mx-auto px-4 py-12">
+    <div class="mb-12 text-center">
+      <h1 class="text-4xl font-bold text-brand-black mb-4">Todas las Recetas</h1>
+      <p class="text-gray-600 max-w-2xl mx-auto">
+        Explora nuestra colección completa de ideas para loncheras saludables y divertidas.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {allRecipes.map((recipe) => (
+        <RecipeCard
+          title={recipe.data.title}
+          description={recipe.data.description}
+          image={recipe.data.image}
+          slug={recipe.slug}
+          tags={recipe.data.tags}
+          prepTime={recipe.data.prepTime}
+        />
+      ))}
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

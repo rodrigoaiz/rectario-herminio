@@ -1,0 +1,109 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import RecipeCard from "../components/RecipeCard.astro";
+import { getCollection } from "astro:content";
+
+const allRecipes = await getCollection("recipes");
+// Shuffle and pick 3
+const randomRecipes = allRecipes.sort(() => 0.5 - Math.random()).slice(0, 3);
+---
+
+<Layout>
+  <Header />
+
+  <main class="flex-grow">
+    <!-- Hero Section -->
+    <section class="bg-brand-yellow py-20">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-5xl md:text-6xl font-bold text-brand-black mb-6">
+          Loncheras <span class="text-white drop-shadow-md">Responsables</span>
+        </h1>
+        <p
+          class="text-xl md:text-2xl text-brand-black/80 max-w-2xl mx-auto mb-10 font-medium"
+        >
+          Recetas nutritivas, divertidas y fáciles de preparar para el recreo de
+          tus hijos.
+        </p>
+        <a
+          href="/recetas"
+          class="inline-block bg-brand-black text-white font-bold py-3 px-8 rounded-full hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all"
+        >
+          Ver todas las recetas
+        </a>
+      </div>
+    </section>
+
+    <!-- Random Recipes Section -->
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="flex justify-between items-end mb-10">
+          <h2 class="text-3xl font-bold text-brand-black">
+            Ideas para esta semana
+          </h2>
+          <a
+            href="/recetas"
+            class="text-brand-black font-semibold hover:text-brand-yellow transition-colors hidden md:block"
+          >
+            Ver más &rarr;
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {
+            randomRecipes.map((recipe) => (
+              <RecipeCard
+                title={recipe.data.title}
+                description={recipe.data.description}
+                image={recipe.data.image}
+                slug={recipe.slug}
+                tags={recipe.data.tags}
+                prepTime={recipe.data.prepTime}
+              />
+            ))
+          }
+        </div>
+
+        <div class="mt-10 text-center md:hidden">
+          <a
+            href="/recetas"
+            class="text-brand-black font-semibold hover:text-brand-yellow transition-colors"
+          >
+            Ver más recetas &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-brand-black mb-12">
+          ¿Por qué elegirnos?
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="p-6 bg-white rounded-xl shadow-sm">
+            <div class="text-4xl mb-4">🍎</div>
+            <h3 class="text-xl font-bold mb-2">Nutritivo</h3>
+            <p class="text-gray-600">
+              Balanceado por expertos para el crecimiento.
+            </p>
+          </div>
+          <div class="p-6 bg-white rounded-xl shadow-sm">
+            <div class="text-4xl mb-4">⚡</div>
+            <h3 class="text-xl font-bold mb-2">Rápido</h3>
+            <p class="text-gray-600">Recetas listas en menos de 20 minutos.</p>
+          </div>
+          <div class="p-6 bg-white rounded-xl shadow-sm">
+            <div class="text-4xl mb-4">🎨</div>
+            <h3 class="text-xl font-bold mb-2">Divertido</h3>
+            <p class="text-gray-600">Diseños que a los niños les encantarán.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

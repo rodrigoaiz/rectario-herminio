@@ -1,15 +1,30 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import RecipeCard from "../../components/RecipeCard.astro";
-import TagFilter from "../../components/TagFilter.astro";
+import Layout from "../../../layouts/Layout.astro";
+import Header from "../../../components/Header.astro";
+import Footer from "../../../components/Footer.astro";
+import RecipeCard from "../../../components/RecipeCard.astro";
+import TagFilter from "../../../components/TagFilter.astro";
 import { getCollection } from "astro:content";
 
-const allRecipes = await getCollection("recipes");
-const uniqueTags = [
-  ...new Set(allRecipes.map((recipe) => recipe.data.tags).flat()),
-].sort();
+export async function getStaticPaths() {
+  const allRecipes = await getCollection("recipes");
+  const uniqueTags = [
+    ...new Set(allRecipes.map((recipe) => recipe.data.tags).flat()),
+  ].sort();
+
+  return uniqueTags.map((tag) => {
+    const filteredRecipes = allRecipes.filter((recipe) =>
+      recipe.data.tags.includes(tag)
+    );
+    return {
+      params: { tag },
+      props: { recipes: filteredRecipes, allTags: uniqueTags },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { recipes, allTags } = Astro.props;
 ---
 
 <Layout>
@@ -18,14 +33,13 @@ const uniqueTags = [
   <main class="flex-grow container mx-auto px-4 py-12">
     <div class="text-center">
       <h1 class="text-4xl font-bold text-brand-black mb-4">
-        Todas las Recetas
+        Recetas con: <span class="text-brand-yellow">{tag}</span>
       </h1>
       <p class="text-gray-600 max-w-2xl mx-auto mb-8">
-        Explora nuestra colección completa de ideas para loncheras saludables y
-        divertidas.
+        Explora nuestras recetas etiquetadas como "{tag}".
       </p>
 
-      <TagFilter tags={uniqueTags} />
+      <TagFilter tags={allTags} activeTag={tag} />
     </div>
 
     <div
@@ -33,7 +47,7 @@ const uniqueTags = [
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
     >
       {
-        allRecipes.map((recipe, index) => (
+        recipes.map((recipe, index) => (
           <div class={`recipe-item ${index >= 6 ? "hidden" : ""}`}>
             <RecipeCard
               title={recipe.data.title}
@@ -49,7 +63,7 @@ const uniqueTags = [
     </div>
 
     {
-      allRecipes.length > 6 && (
+      recipes.length > 6 && (
         <div class="text-center">
           <button
             id="load-more-btn"
@@ -60,6 +74,15 @@ const uniqueTags = [
         </div>
       )
     }
+
+    <div class="mt-12 text-center">
+      <a
+        href="/recetas"
+        class="text-brand-black font-semibold hover:text-brand-yellow transition-colors"
+      >
+        &larr; Ver todas las recetas
+      </a>
+    </div>
   </main>
 
   <Footer />

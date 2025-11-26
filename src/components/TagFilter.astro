@@ -1,0 +1,38 @@
+---
+interface Props {
+  tags: string[];
+  activeTag?: string;
+}
+
+const { tags, activeTag } = Astro.props;
+---
+
+<div class="flex flex-wrap justify-center gap-3 mb-12">
+  <a
+    href="/recetas"
+    class:list={[
+      "px-4 py-2 rounded-full border font-medium transition-all shadow-sm hover:shadow-md",
+      !activeTag
+        ? "bg-brand-black text-white border-brand-black"
+        : "bg-white border-gray-200 text-gray-700 hover:bg-brand-yellow hover:text-brand-black hover:border-brand-yellow",
+    ]}
+  >
+    Ver todo
+  </a>
+
+  {
+    tags.map((tag) => (
+      <a
+        href={`/recetas/tags/${tag}`}
+        class:list={[
+          "px-4 py-2 rounded-full border font-medium transition-all shadow-sm hover:shadow-md",
+          activeTag === tag
+            ? "bg-brand-black text-white border-brand-black"
+            : "bg-white border-gray-200 text-gray-700 hover:bg-brand-yellow hover:text-brand-black hover:border-brand-yellow",
+        ]}
+      >
+        {tag}
+      </a>
+    ))
+  }
+</div>

@@ -1,13 +1,14 @@
 ---
-import { getCollection, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
 
 export async function getStaticPaths() {
-  const recipes = await getCollection('recipes');
-  return recipes.map(recipe => ({
-    params: { slug: recipe.slug }, props: { recipe },
+  const recipes = await getCollection("recipes");
+  return recipes.map((recipe) => ({
+    params: { slug: recipe.slug },
+    props: { recipe },
   }));
 }
 
@@ -25,26 +26,39 @@ const { Content } = await render(recipe);
   </head>
 
   <Header />
-  
+
   <main class="flex-grow container mx-auto px-4 py-12">
-    <article class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+    <article
+      class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden"
+    >
       <!-- Hero Image -->
       <div class="h-64 md:h-96 w-full relative">
-        <img 
-          src={recipe.data.image} 
-          alt={recipe.data.title} 
+        <img
+          src={recipe.data.image}
+          alt={recipe.data.title}
           class="w-full h-full object-cover"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end"
+        >
           <div class="p-8 text-white">
-            <h1 class="text-4xl md:text-5xl font-bold mb-2">{recipe.data.title}</h1>
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">
+              {recipe.data.title}
+            </h1>
             <div class="flex flex-wrap gap-2">
-              {recipe.data.tags.map((tag) => (
-                <span class="bg-brand-yellow text-brand-black text-xs font-bold px-3 py-1 rounded-full">
-                  {tag}
-                </span>
-              ))}
-              <span class="bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
+              {
+                recipe.data.tags.map((tag) => (
+                  <a
+                    href={`/recetas/tags/${tag}`}
+                    class="bg-brand-yellow text-brand-black text-xs font-bold px-3 py-1 rounded-full hover:bg-white hover:text-brand-black transition-colors"
+                  >
+                    {tag}
+                  </a>
+                ))
+              }
+              <span
+                class="bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full"
+              >
                 ⏱️ {recipe.data.prepTime}
               </span>
             </div>
@@ -55,30 +69,41 @@ const { Content } = await render(recipe);
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 p-8">
         <!-- Ingredients Sidebar -->
         <aside class="md:col-span-1">
-          <div class="bg-brand-yellow/10 p-6 rounded-xl border border-brand-yellow/20">
-            <h2 class="text-xl font-bold text-brand-black mb-4 flex items-center gap-2">
+          <div
+            class="bg-brand-yellow/10 p-6 rounded-xl border border-brand-yellow/20"
+          >
+            <h2
+              class="text-xl font-bold text-brand-black mb-4 flex items-center gap-2"
+            >
               🛒 Ingredientes
             </h2>
             <ul class="space-y-2">
-              {recipe.data.ingredients.map((ingredient) => (
-                <li class="flex items-start gap-2 text-gray-700">
-                  <span class="text-brand-yellow mt-1">•</span>
-                  <span>{ingredient}</span>
-                </li>
-              ))}
+              {
+                recipe.data.ingredients.map((ingredient) => (
+                  <li class="flex items-start gap-2 text-gray-700">
+                    <span class="text-brand-yellow mt-1">•</span>
+                    <span>{ingredient}</span>
+                  </li>
+                ))
+              }
             </ul>
           </div>
         </aside>
 
         <!-- Instructions Content -->
-        <div class="md:col-span-2 prose prose-lg prose-headings:text-brand-black prose-a:text-brand-yellow hover:prose-a:text-brand-black prose-strong:text-brand-black text-gray-600">
+        <div
+          class="md:col-span-2 prose prose-lg prose-headings:text-brand-black prose-a:text-brand-yellow hover:prose-a:text-brand-black prose-strong:text-brand-black text-gray-600"
+        >
           <Content />
         </div>
       </div>
     </article>
-    
+
     <div class="mt-8 text-center">
-      <a href="/recetas" class="text-brand-black font-semibold hover:text-brand-yellow transition-colors">
+      <a
+        href="/recetas"
+        class="text-brand-black font-semibold hover:text-brand-yellow transition-colors"
+      >
         &larr; Volver a todas las recetas
       </a>
     </div>

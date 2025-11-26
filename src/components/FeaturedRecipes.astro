@@ -1,0 +1,49 @@
+---
+import RecipeCard from "./RecipeCard.astro";
+
+interface Props {
+  recipes: any[];
+}
+
+const { recipes } = Astro.props;
+---
+
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-end mb-10">
+      <h2 class="text-3xl font-bold text-brand-black">
+        Ideas para esta semana
+      </h2>
+      <a
+        href="/recetas"
+        class="text-brand-black font-semibold hover:text-brand-yellow transition-colors hidden md:block"
+      >
+        Ver más &rarr;
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {
+        recipes.map((recipe) => (
+          <RecipeCard
+            title={recipe.data.title}
+            description={recipe.data.description}
+            image={recipe.data.image}
+            slug={recipe.slug}
+            tags={recipe.data.tags}
+            prepTime={recipe.data.prepTime}
+          />
+        ))
+      }
+    </div>
+
+    <div class="mt-10 text-center md:hidden">
+      <a
+        href="/recetas"
+        class="text-brand-black font-semibold hover:text-brand-yellow transition-colors"
+      >
+        Ver más recetas &rarr;
+      </a>
+    </div>
+  </div>
+</section>
